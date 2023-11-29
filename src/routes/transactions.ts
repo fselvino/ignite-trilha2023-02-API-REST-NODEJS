@@ -3,6 +3,8 @@ import { knex } from '../database'
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 
+// Cookies <-> Formas de manter constexto entre requisições
+
 export async function tranctionsRoutes(app: FastifyInstance) {
   // /transactions
   app.post('/', async (request, replay) => {
@@ -18,11 +20,23 @@ export async function tranctionsRoutes(app: FastifyInstance) {
       request.body,
     ) // validando os dados da requisição para ver se batem com o Schema defido
 
+    let sessionId = request.cookies.sessionId
+
+    if (!sessionId) {
+      sessionId = randomUUID()
+
+      replay.cookie('sessionId', sessionId, {
+        path: '/',
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days em milisegundos
+      })
+    }
+
     // realiza a inserção dos dados vindos da aplicação
     await knex('transactions').insert({
       id: randomUUID(),
       title,
       amount: type === 'credit' ? amount : amount * -1,
+      session_id: sessionId,
     })
     return replay.status(201).send()
   })
@@ -54,6 +68,7 @@ export async function tranctionsRoutes(app: FastifyInstance) {
     }
   })
 
+  // retorna um somatorio da coluna amount
   app.get('/summary', async () => {
     const summary = await knex('transactions')
       .sum('amount', { as: 'amount' }) // é preciso nomear a coluna para que não retorne sun{amount}
