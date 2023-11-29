@@ -31,7 +31,33 @@ export async function tranctionsRoutes(app: FastifyInstance) {
   app.get('/', async () => {
     const transactions = await knex('transactions')
       // .whe('amount', 1000) // onde amount = 100 - primeira coluna campo sengundo valor
-      .select('*')
-    return transactions
+      .select()
+
+    // prefira retornar um objeto
+    return {
+      transactions,
+    }
+  })
+
+  // Lista somente uma transação com id valido
+  // //localhost:3333/transactions/uuid
+  app.get('/:id', async (request) => {
+    const getTransactionParamsSchema = z.object({
+      id: z.string().uuid(),
+    })
+    const { id } = getTransactionParamsSchema.parse(request.params)
+
+    const transaction = await knex('transactions').where('id', id).first()
+
+    return {
+      transaction,
+    }
+  })
+
+  app.get('/summary', async () => {
+    const summary = await knex('transactions')
+      .sum('amount', { as: 'amount' }) // é preciso nomear a coluna para que não retorne sun{amount}
+      .first()
+    return { summary }
   })
 }
