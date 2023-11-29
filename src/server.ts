@@ -4,7 +4,10 @@ import { tranctionsRoutes } from './routes/transactions'
 
 const app = fastify()
 
-app.register(tranctionsRoutes)
+// injeção de dependencia com prefixo transactions
+app.register(tranctionsRoutes, {
+  prefix: 'transactions',
+})
 
 // principais metodos GET, POST, PUT, PATCH, DELETE
 
