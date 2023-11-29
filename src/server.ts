@@ -3,8 +3,11 @@ import cookie from '@fastify/cookie'
 
 import { env } from './env'
 import { tranctionsRoutes } from './routes/transactions'
+import { logSessionAcess } from './middlewares/log-routes-acess'
 
 const app = fastify()
+
+app.addHook('preHandler', logSessionAcess) // hook global
 
 // A injeção de cookies deve ser feita bem no inicio antes da injeção das rotas
 app.register(cookie)
