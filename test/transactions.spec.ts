@@ -1,5 +1,6 @@
-import { it, beforeAll, afterAll, describe, expect } from 'vitest'
+import { it, beforeAll, afterAll, describe, expect, beforeEach } from 'vitest'
 import request from 'supertest'
+import { execSync } from 'node:child_process' // permite execultar qualquer comando do termimal
 import { app } from '../src/app'
 
 // Metodo que descreve o que o test irá fazer
@@ -15,6 +16,11 @@ describe('Transactions routes', () => {
     await app.close()
   })
 
+  beforeEach(() => {
+    execSync('npm run knex migrate:rollback --all')
+    execSync('npm run knex migrate:latest')
+  })
+
   // Deve ser capaz de criar uma nova transação
   it('should be able to create a new transaction', async () => {
     await request(app.server)
@@ -25,6 +31,7 @@ describe('Transactions routes', () => {
         type: 'credit',
       })
       .expect(201)
+    // console.log(response.body)
   })
 
   /**
