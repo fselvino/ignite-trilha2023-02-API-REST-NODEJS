@@ -6,6 +6,19 @@ import { checkSessionIdExists } from '../middlewares/check-session-id-exists'
 
 // Cookies <-> Formas de manter constexto entre requisições
 
+/**
+ * Tipos de testes automatizados - são formas de manter a confiança no momento de dar manuteção no codigo
+ * Unitários: unidade da sua aplicação
+ * Integração: comunicação entre duas ou mais unidades
+ * e2e - ponta a ponta: simulam um usuário operando nossa aplicação
+ *
+ * front-end: abre a página de login, digite o texto diego@rocketseat.com.br no compo com ID email, clique no botão
+ * back-end: chamadas HTTP`, webSockets
+ *
+ * Pirãmide de teste: E2E (não dependem de nenhuma tecnologia, não dependem de arquiterura)
+ *
+ */
+
 export async function tranctionsRoutes(app: FastifyInstance) {
   // /transactions
   app.post('/', async (request, reply) => {
