@@ -97,6 +97,29 @@ export async function tranctionsRoutes(app: FastifyInstance) {
     }
   })
 
+  app.delete(
+    '/:id',
+    { preHandler: [checkSessionIdExists] },
+    async (request) => {
+      const getTransactionParamsSchema = z.object({
+        id: z.string().uuid(),
+      })
+      const { id } = getTransactionParamsSchema.parse(request.params)
+      const { sessionId } = request.cookies
+
+      const transaction = await knex('transactions')
+        .where({
+          id,
+          session_id: sessionId,
+        })
+        .del()
+
+      return {
+        transaction,
+      }
+    },
+  )
+
   // retorna um somatorio da coluna amount
   app.get(
     '/summary',
