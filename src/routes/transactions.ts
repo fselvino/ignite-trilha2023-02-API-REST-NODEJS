@@ -59,7 +59,7 @@ export async function tranctionsRoutes(app: FastifyInstance) {
     return reply.status(201).send()
   })
 
-  // /transactions
+  // Lista todas transactions
   app.get(
     '/',
     { preHandler: [checkSessionIdExists] }, // Verifica por meio de middleware se o cookie existe e é valido na consulta
@@ -76,8 +76,7 @@ export async function tranctionsRoutes(app: FastifyInstance) {
     },
   )
 
-  // Lista somente uma transação com id valido
-  // //localhost:3333/transactions/uuid
+  // Lista uma transactions por id
   app.get('/:id', { preHandler: [checkSessionIdExists] }, async (request) => {
     const getTransactionParamsSchema = z.object({
       id: z.string().uuid(),
@@ -97,6 +96,7 @@ export async function tranctionsRoutes(app: FastifyInstance) {
     }
   })
 
+  // Deleta transação
   app.delete(
     '/:id',
     { preHandler: [checkSessionIdExists] },
@@ -120,7 +120,7 @@ export async function tranctionsRoutes(app: FastifyInstance) {
     },
   )
 
-  // retorna um somatorio da coluna amount
+  // retorna somatorio da coluna amount
   app.get(
     '/summary',
     { preHandler: [checkSessionIdExists] },
