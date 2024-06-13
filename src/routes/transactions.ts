@@ -96,6 +96,20 @@ export async function tranctionsRoutes(app: FastifyInstance) {
     }
   })
 
+  // retorna somatorio da coluna amount
+  app.get(
+    '/summary',
+    { preHandler: [checkSessionIdExists] },
+    async (request) => {
+      const { sessionId } = request.cookies
+      const summary = await knex('transactions')
+        .where('session_id', sessionId)
+        .sum('amount', { as: 'amount' }) // é preciso nomear a coluna para que não retorne sun{amount}
+        .first()
+      return { summary }
+    },
+  )
+
   // Deleta transação
   app.delete(
     '/:id',
@@ -117,20 +131,6 @@ export async function tranctionsRoutes(app: FastifyInstance) {
       return {
         transaction,
       }
-    },
-  )
-
-  // retorna somatorio da coluna amount
-  app.get(
-    '/summary',
-    { preHandler: [checkSessionIdExists] },
-    async (request) => {
-      const { sessionId } = request.cookies
-      const summary = await knex('transactions')
-        .where('session_id', sessionId)
-        .sum('amount', { as: 'amount' }) // é preciso nomear a coluna para que não retorne sun{amount}
-        .first()
-      return { summary }
     },
   )
 }

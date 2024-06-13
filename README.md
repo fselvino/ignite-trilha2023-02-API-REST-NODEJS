@@ -4,6 +4,7 @@
 - [x] O Usuário deve poder obter um sesumo da conta;
 - [x] O Usuário deve poder listar todas transações que já ocorreram;
 - [x] O Usuário deve poder visualizar uma transação única;
+- [x] O Usuário deve poder deletar uma transação
 
 
 # RN - Regra de Negócio
