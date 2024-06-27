@@ -21,7 +21,7 @@ import { checkSessionIdExists } from '../middlewares/check-session-id-exists'
  */
 
 export async function tranctionsRoutes(app: FastifyInstance) {
-  // Cria uma transação
+  // Cria uma transação de debit or credit
   app.post('/', async (request, reply) => {
     // definição de schema para criar uma transação definindo o tipo dos dados vindo da aplicação
     const createTransactionBodySchema = z.object({
